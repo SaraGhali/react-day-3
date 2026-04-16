@@ -4,7 +4,8 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCart } from "@/context/CartContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cartSlice";
 import { toast } from "sonner";
 import {
   MoveLeft,
@@ -20,7 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -150,7 +151,7 @@ export default function ProductDetails() {
               className="flex-1 gap-2"
               disabled={isOutOfStock}
               onClick={() => {
-                addToCart(product);
+                dispatch(addToCart(product));
                 toast.success(`${product.title} added to cart!`);
               }}
             >

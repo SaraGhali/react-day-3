@@ -1,5 +1,4 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { CartProvider } from "./context/CartContext";
 import MainLayout from "./layouts/MainLayout";
 import ProductsList from "./pages/ProductsList";
 import ProductDetails from "./pages/ProductDetails";
@@ -35,9 +34,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <RouterProvider router={router} />
   );
 }
 

@@ -1,19 +1,23 @@
 import { ShoppingBag, ArrowRight, Trash2, Plus, Minus, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useCart } from "@/context/CartContext";
-import { 
-  Card, 
-  CardContent, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart, updateQuantity, clearCart } from "@/store/cartSlice";
+
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity, clearCart, getSubtotal } = useCart();
-  const subtotal = getSubtotal();
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.cartItems);
+
+  const subtotal = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
 
   if (cart.length === 0) {
     return (
@@ -41,7 +45,7 @@ export default function Cart() {
     <div className="max-w-6xl mx-auto py-12 space-y-8 animate-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-bold tracking-tight">Shopping Cart</h1>
-        <Button variant="ghost" className="text-muted-foreground hover:text-destructive" onClick={clearCart}>
+        <Button variant="ghost" className="text-muted-foreground hover:text-destructive" onClick={() => dispatch(clearCart())}>
           Clear Cart
         </Button>
       </div>
@@ -55,15 +59,15 @@ export default function Cart() {
                 <div className="h-24 w-24 rounded-lg bg-muted overflow-hidden shrink-0 border">
                   <img src={item.thumbnail} alt={item.title} className="w-full h-full object-cover" />
                 </div>
-                
+
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between items-start">
                     <h3 className="font-bold text-lg leading-none">{item.title}</h3>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => dispatch(removeFromCart(item.id))}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -73,20 +77,20 @@ export default function Cart() {
                 </div>
 
                 <div className="flex items-center gap-3 bg-muted rounded-full p-1">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className="h-8 w-8 rounded-full bg-background"
-                    onClick={() => updateQuantity(item.id, -1)}
+                    onClick={() => dispatch(updateQuantity({ id: item.id, amount: -1 }))}
                   >
                     <Minus className="h-3 w-3" />
                   </Button>
                   <span className="font-bold w-4 text-center">{item.quantity}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className="h-8 w-8 rounded-full bg-background"
-                    onClick={() => updateQuantity(item.id, 1)}
+                    onClick={() => dispatch(updateQuantity({ id: item.id, amount: 1 }))}
                   >
                     <Plus className="h-3 w-3" />
                   </Button>

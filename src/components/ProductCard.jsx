@@ -9,19 +9,21 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useCart } from "@/context/CartContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/store/cartSlice";
 import { ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ProductCard({ id, title, price, description, category, thumbnail, stock }) {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const isOutOfStock = stock === 0;
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!isOutOfStock) {
-      addToCart({ id, title, price, thumbnail, description });
+      const productData = { id, title, price, thumbnail, description, category, stock };
+      dispatch(addToCart(productData));
       toast.success(`${title} added to cart!`);
     }
   };
