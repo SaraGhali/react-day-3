@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { CartProvider } from "./context/CartContext";
 import MainLayout from "./layouts/MainLayout";
 import ProductsList from "./pages/ProductsList";
 import ProductDetails from "./pages/ProductDetails";
@@ -7,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import "./App.css";
 
 const router = createBrowserRouter([
+  /* ... existing routes ... */
   {
     path: "/",
     element: <MainLayout />,
@@ -32,7 +34,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
+  );
 }
 
 export default App;
